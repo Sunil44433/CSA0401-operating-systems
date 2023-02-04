@@ -1,0 +1,29 @@
+#include <stdio.h>
+
+// Function to calculate the average head movement
+float avgHeadMovement(int tracks[], int n, int start) {
+    int totalHeadMovement = 0;
+
+    for (int i = 0; i < n; i++) {
+        totalHeadMovement += abs(start - tracks[i]);
+        start = tracks[i];
+    }
+
+    return (float)totalHeadMovement / n;
+}
+
+int main() {
+    int n = 5; // No of tracks
+    int tracks[] = {55, 58, 60, 70, 18}; // Track position
+
+    // Start position
+    int start = 55;
+
+    // Calculate the average head movement
+    float avg = avgHeadMovement(tracks, n, start);
+
+    // Print the result
+    printf("The average head movement is: %.2f\n", avg);
+
+    return 0;
+}
