@@ -1,0 +1,23 @@
+#include <stdio.h>
+
+#define MAX 9
+
+int main() {
+    int tracks[MAX] = {55, 58, 60, 70, 18, 90, 150, 160, 184};
+    int head, seek_time = 0, diff;
+    int i;
+
+    printf("Enter current position of head: ");
+    scanf("%d", &head);
+
+    for (i = 0; i < MAX; ++i) {
+        diff = abs(head - tracks[i]);
+        seek_time += diff;
+        head = tracks[i];
+    }
+
+    printf("Total seek time: %d\n", seek_time);
+    printf("Average seek time: %.2f\n", (float)seek_time / MAX);
+
+    return 0;
+}
