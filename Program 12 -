@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define PARTITION_COUNT 6
+#define PROCESS_COUNT 5
+#define NOT_ALLOCATED -1
+
+int partitions[PARTITION_COUNT] = {300, 600, 350, 200, 750, 125};
+int process_allocation[PROCESS_COUNT] = {NOT_ALLOCATED, NOT_ALLOCATED, NOT_ALLOCATED, NOT_ALLOCATED, NOT_ALLOCATED};
+int process_sizes[PROCESS_COUNT] = {115, 500, 358, 200, 375};
+
+int findBestFit(int processSize) {
+    int i, bestFit = NOT_ALLOCATED, minDifference = INT_MAX;
+    for (i = 0; i < PARTITION_COUNT; i++) {
+        if (partitions[i] >= processSize) {
+            int difference = partitions[i] - processSize;
+            if (difference < minDifference) {
+                bestFit = i;
+                minDifference = difference;
+            }
+        }
+    }
+    return bestFit;
+}
+
+int main() {
+    int i;
+    for (i = 0; i < PROCESS_COUNT; i++) {
+        int bestFit = findBestFit(process_sizes[i]);
+        if (bestFit != NOT_ALLOCATED) {
+            process_allocation[i] = bestFit;
+            partitions[bestFit] -= process_sizes[i];
+        }
+    }
+    printf("Process Size\tAllocated Partition\n");
+    for (i = 0; i < PROCESS_COUNT; i++) {
+        printf("%d\t\t\t", process_sizes[i]);
+        if (process_allocation[i] == NOT_ALLOCATED) {
+            printf("Not Allocated\n");
+        } else {
+            printf("%d\n", process_allocation[i]);
+        }
+    }
+    return 0;
+}
