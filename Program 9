@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_PROCESSES 3
+
+// Structure to store the process information
+struct process {
+  int process_id;
+  int compute_time;
+};
+
+// Function to sort the processes based on arrival time
+void sortProcesses(struct process *processes) {
+  for (int i = 0; i < MAX_PROCESSES; i++) {
+    for (int j = i + 1; j < MAX_PROCESSES; j++) {
+      if (processes[i].compute_time > processes[j].compute_time) {
+        struct process temp = processes[i];
+        processes[i] = processes[j];
+        processes[j] = temp;
+      }
+    }
+  }
+}
+
+int main() {
+  struct process processes[MAX_PROCESSES] = {{0, 2}, {1, 4}, {2, 8}};
+  int waiting_time[MAX_PROCESSES];
+  int turnaround_time[MAX_PROCESSES];
+  int total_waiting_time = 0;
+  int total_turnaround_time = 0;
+  
+  sortProcesses(processes);
+  waiting_time[0] = 0;
+  turnaround_time[0] = processes[0].compute_time;
+  for (int i = 1; i < MAX_PROCESSES; i++) {
+    waiting_time[i] = turnaround_time[i - 1];
+    turnaround_time[i] = waiting_time[i] + processes[i].compute_time;
+  }
+
+
+  for (int i = 0; i < MAX_PROCESSES; i++) {
+    total_waiting_time += waiting_time[i];
+    total_turnaround_time += turnaround_time[i];
+  }
+
+  
+  float average_waiting_time = (float)total_waiting_time / MAX_PROCESSES;
+  float average_turnaround_time = (float)total_turnaround_time / MAX_PROCESSES;
+printf("Average Waiting Time: %.2f\n", average_waiting_time);
+  printf("Average Turnaround Time: %.2f\n", average_turnaround_time);
+
+  return 0;
+}
