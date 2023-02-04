@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <pthread.h>
+#include <semaphore.h>
+
+#define SHARED_MEMORY_KEY 1234
+
+int shared_memory = 0;
+sem_t sem;
+
+void *double_thread(void *param) {
+    sem_wait(&sem);
+    int doubled = shared_memory * 2;
+    printf("Double Thread: Shared Memory = %d, Doubled = %d\n", shared_memory, doubled);
+    sem_post(&sem);
+}
+
+void *five_times_thread(void *param) {
+    sem_wait(&sem);
+    int five_times = shared_memory * 5;
+    printf("Five Times Thread: Shared Memory = %d, Five Times = %d\n", shared_memory, five_times);
+    sem_post(&sem);
+}
+
+int main() {
+    sem_init(&sem, 0, 1);
+
+    pthread_t double_thread_id, five_times_thread_id;
+    pthread_create(&double_thread_id, NULL, double_thread, NULL);
+    pthread_create(&five_times_thread_id, NULL, five_times_thread, NULL);
+
+    shared_memory = 4;
+pthread_join(double_thread_id, NULL);
+    pthread_join(five_times_thread_id, NULL);
+
+    sem_destroy(&sem);
+
+    return 0;
+}
