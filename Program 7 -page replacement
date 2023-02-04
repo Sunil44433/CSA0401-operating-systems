@@ -1,0 +1,77 @@
+#include<stdio.h> 
+#define MAX 20 
+
+int pageFrames, pageFaults = 0, pageRef[MAX], frames[MAX]; 
+
+void displayPages() 
+{ 
+	int i; 
+	printf("\nPages:"); 
+	for (i = 0; i < pageFrames; i++) 
+	{ 
+		printf(" %d\t", frames[i]); 
+	} 
+} 
+
+int isHit(int data) 
+{ 
+	int i; 
+	for (i = 0; i < pageFrames; i++) 
+	{ 
+		if (frames[i] == data) 
+		{ 
+			return 1; 
+		} 
+	} 
+	return 0; 
+} 
+
+void updateFrames(int data) 
+{ 
+	int i; 
+	for (i = 1; i < pageFrames; i++) 
+	{ 
+		frames[i - 1] = frames[i]; 
+	} 
+	frames[pageFrames - 1] = data; 
+} 
+
+void lru(int page) 
+{ 
+	if (isHit(page) == 0) 
+	{ 
+		pageFaults++; 
+		updateFrames(page); 
+		displayPages(); 
+	} 
+} 
+
+int main() 
+{ 
+	int i, numOfPages; 
+	printf("Enter the number of pages: "); 
+	scanf("%d", &numOfPages); 
+
+	printf("Enter the reference string: "); 
+	for (i = 0; i < numOfPages; i++) 
+	{ 
+		scanf("%d", &pageRef[i]); 
+	} 
+
+	printf("Enter the number of page frames: "); 
+	scanf("%d", &pageFrames); 
+
+	for (i = 0; i < pageFrames; i++) 
+	{ 
+		frames[i] = -1; 
+	} 
+
+	for (i = 0; i < numOfPages; i++) 
+	{ 
+		lru(pageRef[i]); 
+	} 
+
+	printf("\nTotal Page Faults = %d", pageFaults); 
+
+	return 0; 
+}
