@@ -1,0 +1,47 @@
+#include<stdio.h>
+
+#define MAX_PAGE_FRAMES 3
+
+void FIFO_Page_Replacement(int page_reference_sequence[], int length)
+{
+    int page_frames[MAX_PAGE_FRAMES];
+    int page_fault_count = 0;
+    int current_pointer = 0;
+    int i, j;
+
+    for (i = 0; i < MAX_PAGE_FRAMES; i++)
+        page_frames[i] = -1;
+
+    for (i = 0; i < length; i++)
+    {
+        int found = 0;
+
+        for (j = 0; j < MAX_PAGE_FRAMES; j++)
+        {
+            if (page_frames[j] == page_reference_sequence[i])
+            {
+                found = 1;
+                break;
+            }
+        }
+
+        if (!found)
+        {
+            page_frames[current_pointer] = page_reference_sequence[i];
+            current_pointer = (current_pointer + 1) % MAX_PAGE_FRAMES;
+            page_fault_count++;
+        }
+    }
+
+    printf("Number of page faults using FIFO: %d\n", page_fault_count);
+}
+
+int main()
+{
+    int page_reference_sequence[] = {4, 1, 2, 4, 3, 2, 1, 5};
+    int length = sizeof(page_reference_sequence) / sizeof(page_reference_sequence[0]);
+
+    FIFO_Page_Replacement(page_reference_sequence, length);
+
+    return 0;
+}
