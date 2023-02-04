@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+#define NUM_PARTITIONS 6
+#define NUM_PROCESSES 5
+
+int memory_partitions[NUM_PARTITIONS] = {300, 600, 350, 200, 750, 125};
+int memory_allocations[NUM_PARTITIONS];
+
+int worst_fit(int size) {
+    int i, max_index = -1, max_value = -1;
+    for (i = 0; i < NUM_PARTITIONS; i++) {
+        if (memory_partitions[i] >= size && memory_partitions[i] > max_value) {
+            max_index = i;
+            max_value = memory_partitions[i];
+        }
+    }
+    return max_index;
+}
+
+int main() {
+    int processes[NUM_PROCESSES] = {115, 500, 358, 200, 375};
+    int i, index;
+
+    for (i = 0; i < NUM_PROCESSES; i++) {
+        index = worst_fit(processes[i]);
+        if (index != -1) {
+            memory_allocations[index] = processes[i];
+            memory_partitions[index] -= processes[i];
+        } else {
+            printf("No suitable memory partition for process %d\n", i);
+        }
+    }
+
+    printf("Memory Allocations:\n");
+    for (i = 0; i < NUM_PARTITIONS; i++) {
+        printf("Partition %d: %d KB\n", i, memory_allocations[i]);
+    }
+
+    return 0;
+}
